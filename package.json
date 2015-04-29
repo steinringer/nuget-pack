@@ -1,0 +1,19 @@
+{
+  "name": "nuget-pckg",
+  "version": "1.0.0",
+  "description": "Node.js module that scans solution folders for .nuspec files and packs packages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine-node tests --color --autotest"
+  },
+  "author": "Jozef Lacny <mcsdodo@ynet.sk>",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "jasmine-node": "^1.14.5"
+  },
+  "dependencies": {
+    "find": "^0.1.7",
+    "nuget-runner": "^0.1.5"
+  }
+}

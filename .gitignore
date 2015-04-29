@@ -1,0 +1,4 @@
+*.dat
+node_modules/
+*.sln.DotSettings.user
+*.suo

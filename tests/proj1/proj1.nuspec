@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>Proj1</id>
+		<title>Proj1</title>
+		<version>1.0.0</version>
+	</metadata>
+	<files>
+		<file src="bin\proj1.dll" target="lib" />
+		<file src="bin\someother.dll" target="lib" />
+	</files>
+</package>

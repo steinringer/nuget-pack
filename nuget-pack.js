@@ -9,6 +9,7 @@ var Nu = function (options) {
 }
 
 Nu.prototype.getNuspecs = function (callback) {
+	var self = this;
     var dir = this.options.baseDir;
     if (!fs.existsSync(dir))
         return callback(new Error('Provided baseDir does not exist'), null);
@@ -16,36 +17,73 @@ Nu.prototype.getNuspecs = function (callback) {
     if (!path.isAbsolute(this.options.baseDir)) {
         dir = path.join(__dirname, this.options.baseDir);
     }
-    
     find.file(/\w\.nuspec$/, dir, function (files) {
         if (callback && typeof callback === 'function') {
-            callback(null, files);
+            var filtered = files.filter(function (f) {
+		        return !shouldSkip(f);
+            });
+	        if (filtered.length == 0)
+                callback(new Error('No .nuspec files match the criteria'), null);
+            else
+                callback(null, filtered);
         } else {
             throw new Error('You have to provide callback function.');
         }
 		
     });
 
+    var shouldSkip = function (nuspecFile) {
+        if (self.options.skip == null) return false;
+        
+        var should = false;    
+        
+        self.options.skip.forEach(function (skip) {
+	        var regex = new RegExp(skip);
+            should = should || regex.test(nuspecFile);
+        });
+
+	    
+	    return should;
+    }
+
 };
 
-Nu.prototype.pack = function(callback) {
-    this.getNuspecs(function (err, res) {
+Nu.prototype.resolveOutputPath = function () {
+    var self = this;
+	if (self.options.outputPath)
+		return self.options.outputPath;
 
-	});
+    return path.join(__dirname, self.options.baseDir);
 }
 
-module.exports = function (options) {
+Nu.prototype.pack = function (callback) {
+    var self = this;
+
+    var nugetExePath = path.join(__dirname, 'bin/nuget.exe');
     
-    var nugetPath = './bin/nuget.exe';
     var nuget = Nuget({
-        nugetPath: nugetPath
+        nugetPath: nugetExePath,
+        verbosity: 'quiet'
     });
     
-    var nu = new Nu(options);
-    return {
-        pack: nuget.pack,
-        getNuspecs: function(callback) {
-	        return nu.getNuspecs(callback);
-        }
-    }
+    self.getNuspecs(function (error, res) {
+        var resolvedCnt = 0;
+	    var expectedCnt = res.length;
+        res.forEach(function (item) {
+            
+	        nuget.pack({
+		        spec: item,
+		        outputDirectory: self.resolveOutputPath()
+	        })
+            .then(function () {
+                resolvedCnt++;
+	            if (resolvedCnt == expectedCnt)
+		            callback();
+            });
+
+
+        });
+    });
 }
+
+module.exports = Nu;

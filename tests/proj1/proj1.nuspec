@@ -4,9 +4,12 @@
 		<id>Proj1</id>
 		<title>Proj1</title>
 		<version>1.0.0</version>
+		<authors>AA</authors>
+		<description>BB</description>
 	</metadata>
 	<files>
 		<file src="bin\proj1.dll" target="lib" />
 		<file src="bin\someother.dll" target="lib" />
+		<file src="README.txt" />
 	</files>
 </package>

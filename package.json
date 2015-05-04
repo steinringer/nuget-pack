@@ -9,7 +9,7 @@
   "author": "Jozef Lacny <mcsdodo@ynet.sk>",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.8.11",
+    "fs-extra": "^0.18.2",
     "jasmine-node": "^1.14.5"
   },
   "dependencies": {

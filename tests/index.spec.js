@@ -1,7 +1,7 @@
 ﻿'use strict';
-describe('nuget-pack', function () {
+describe('nuget-pckg', function () {
     
-    var Ng = require('../nuget-pack.js'),
+    var Ng = require('../nuget-pckg.js'),
         fse = require('fs-extra'),
         fs = require('fs');
     

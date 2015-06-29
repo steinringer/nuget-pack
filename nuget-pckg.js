@@ -33,12 +33,12 @@ Nu.prototype.getNuspecs = function (callback) {
     });
 
     var shouldSkip = function (nuspecFile) {
-        if (self.options.skip == null) return false;
-        
+        if (self.options.skip == null) self.options.skip = [];
+	    self.options.skip.push('node_modules');
         var should = false;    
         
         self.options.skip.forEach(function (skip) {
-	        var regex = new RegExp(skip);
+            var regex = new RegExp(skip);
             should = should || regex.test(nuspecFile);
         });
 

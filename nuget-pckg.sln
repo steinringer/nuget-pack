@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "nuget-pack", "nuget-pack.njsproj", "{010EF9A4-2495-48A3-B1AA-A44B38979332}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "nuget-pckg", "nuget-pckg.njsproj", "{010EF9A4-2495-48A3-B1AA-A44B38979332}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

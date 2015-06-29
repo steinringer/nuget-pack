@@ -68,16 +68,22 @@ Nu.prototype.pack = function (callback) {
     
     self.getNuspecs(function (error, res) {
         var resolvedCnt = 0;
-	    var expectedCnt = res.length;
+        var expectedCnt = res.length;
+
+        var outputDir = self.resolveOutputPath();
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
+
         res.forEach(function (item) {
             
 	        nuget.pack({
 		        spec: item,
-		        outputDirectory: self.resolveOutputPath()
+		        outputDirectory: outputDir
 	        })
             .then(function () {
                 resolvedCnt++;
-	            if (resolvedCnt == expectedCnt)
+	            if (resolvedCnt == expectedCnt && callback && typeof callback == 'function')
 		            callback();
             });
 

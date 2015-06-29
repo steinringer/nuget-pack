@@ -1,19 +1,27 @@
 {
-  "name": "nuget-pckg",
-  "version": "1.0.2",
-  "description": "Node.js module that scans solution folders for .nuspec files and packs packages.",
-  "main": "index.js",
-  "scripts": {
-    "test": "jasmine-node tests --color --autotest"
-  },
-  "author": "Jozef Lacny <mcsdodo@ynet.sk>",
-  "license": "MIT",
-  "devDependencies": {
-    "fs-extra": "^0.18.2",
-    "jasmine-node": "^1.14.5"
-  },
-  "dependencies": {
-    "find": "^0.1.7",
-    "nuget-runner": "^0.1.5"
-  }
+    "name": "nuget-pckg",
+    "version": "1.0.3",
+    "description": "Node.js module that scans solution folders for .nuspec files and packs packages.",
+    "main": "nuget-pckg.js",
+    "scripts": {
+        "test": "jasmine-node tests --color --autotest"
+    },
+    "author": "Jozef Lacny <mcsdodo@ynet.sk>",
+    "license": "MIT",
+    "devDependencies": {
+        "fs-extra": "^0.18.2",
+        "jasmine-node": "^1.14.5"
+    },
+    "keywords": [ 
+        "nuget", "package"
+    ],
+    "dependencies": {
+        "find": "^0.1.7",
+        "nuget-runner": "^0.1.5"
+    },
+    "homepage": "https://github.com/mcsdodo/nuget-pack",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mcsdodo/nuget-pack"
+    }
 }

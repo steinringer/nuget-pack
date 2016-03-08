@@ -14,3 +14,7 @@ var ng = new Ng({
 });
 ng.pack();
 ```
+
+##### Changelog:
+
+1.0.5 - updated nuget.exe to version 3.3

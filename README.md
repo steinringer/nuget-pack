@@ -18,3 +18,4 @@ ng.pack();
 ##### Changelog:
 
 1.0.5 - updated nuget.exe to version 3.3
+1.0.6 - updated dependencies find (0.1.7 -> 0.2.4) and nuget-runner (0.1.5 -> 0.1.8)

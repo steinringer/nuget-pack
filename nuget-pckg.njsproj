@@ -23,6 +23,7 @@
     <Content Include="bin\nuget.exe" />
     <Content Include="package.json" />
     <Compile Include="nuget-pckg.js" />
+    <Content Include="tests\packed\Proj1.1.0.0.nupkg" />
     <Content Include="tests\proj1\bin\someother.dll" />
     <Content Include="tests\proj1\bin\proj1.dll" />
     <Content Include="tests\proj1\README.txt" />
@@ -33,6 +34,7 @@
   <ItemGroup>
     <Folder Include="bin" />
     <Folder Include="tests" />
+    <Folder Include="tests\packed\" />
     <Folder Include="tests\proj2\" />
     <Folder Include="tests\proj1\" />
     <Folder Include="tests\proj1\bin\" />

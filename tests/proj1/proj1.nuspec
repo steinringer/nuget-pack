@@ -8,8 +8,8 @@
 		<description>BB</description>
 	</metadata>
 	<files>
-		<file src="bin\proj1.dll" target="lib" />
-		<file src="bin\someother.dll" target="lib" />
+		<file src="bin\proj1.dll" target="lib\net45" />
+		<file src="bin\someother.dll" target="lib\net45" />
 		<file src="README.txt" />
 	</files>
 </package>

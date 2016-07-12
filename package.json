@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "find": "^0.2.4",
-    "nuget-runner": "^0.1.8"
+    "nuget-runner": "^0.1.10"
   },
   "homepage": "https://github.com/mcsdodo/nuget-pack",
   "repository": {

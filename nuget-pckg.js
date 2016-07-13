@@ -63,6 +63,15 @@ var getInstance = function() {
     return nuget;
 }
 
+var checkCallback = function () {
+	//you should not provide callback when the method is used in stream mode.
+    if (arguments[0] && arguments[0][0] && (!arguments[0][0].spec && !arguments[0][0].nupkg)) {
+        if (arguments[0][1] && typeof arguments[0][1] === "function") {
+			console.warn("You should not provide callback function if method is used in stream mode. Hook to .on('end', fn) event instead!");
+        }
+    }
+}
+
 Nu.prototype.getNuspecs = function (options, callback) {
 	options = options || {};
 	var finishCallback = callback || function () { };
@@ -96,6 +105,7 @@ Nu.prototype.getNuspecs = function (options, callback) {
 }
 
 Nu.prototype.pack = function (options, callback) {
+    checkCallback(arguments);
 	options = options || {};
 	var finishCallback = callback || function () { };
 	
@@ -126,7 +136,6 @@ Nu.prototype.pack = function (options, callback) {
 	        finishCallback();
 	    });
 	}
-	
 	return map(function (data, callback) {
 		nuget.pack({
 			spec: data.nuspec,
@@ -136,12 +145,13 @@ Nu.prototype.pack = function (options, callback) {
 			log(data.nuspec, packedNupkgPath);
 		    data.nupkg = packedNupkgPath;		    
 		    callback(null, data);
-			finishCallback();
 		});
 	});
 }
 
 Nu.prototype.add = function (options, callback) {
+	checkCallback(arguments);
+
 	options = options || {};
 	var finishCallback = callback || function () { };
 	
@@ -155,7 +165,6 @@ Nu.prototype.add = function (options, callback) {
 			console.log("Added: " + nupkg + " to " + options.source);
 		} 
 	}
-	
 
 	if (options.nupkg) {
 		nuget.add({
@@ -173,7 +182,6 @@ Nu.prototype.add = function (options, callback) {
 			}).then(function () {
 			    log(data.nupkg);
 				callback(null, data);
-				finishCallback();
 			});
 		});
 	}

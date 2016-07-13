@@ -19,7 +19,7 @@ gulp.task('stream', function (done) {
 	.pipe(ng.add({
 		source: './tests/server',
 		log: true
-	}, done));
+	})).on('end', done);
 });
 
 gulp.task('list', function(cb) {
@@ -37,12 +37,12 @@ gulp.task('pack', ['list'], function (cb) {
 	}, cb);
 });
 
-gulp.task('add', ['pack'],  function () {
+gulp.task('add', ['pack'],  function (cb) {
 	ng.add({
 		nupkg: './tests/publishFolder/Proj1.1.0.0.nupkg',
 		source: './tests/server',
 		log: true
-	});
+	}, cb);
 });
 
 gulp.task('clean', function() {

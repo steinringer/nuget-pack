@@ -29,6 +29,10 @@ ng.getNuspecs({
 
 ```
 
+##### Test
+```
+npm test
+```
 
 ##### Old usage - up to version 1.0.6:
 

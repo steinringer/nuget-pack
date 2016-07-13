@@ -1,1 +1,14 @@
-﻿
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>Proj2</id>
+		<title>Proj2</title>
+		<version>1.0.0</version>
+		<authors>AA</authors>
+		<description>BB</description>
+	</metadata>
+	<files>
+		<file src="bin\someother.dll" target="lib\net45" />
+		<file src="README.txt" />
+	</files>
+</package>

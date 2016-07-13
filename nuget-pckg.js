@@ -85,7 +85,7 @@ Nu.prototype.getNuspecs = function (options, callback) {
 	filtered.forEach(function (f) {
 	    var obj = new NuObject(f);
 		rs.push(obj);
-		if (options.print) {
+		if (options.log) {
 			console.log(obj.nuspec);
 		}
 	});
@@ -110,8 +110,8 @@ Nu.prototype.pack = function (options, callback) {
 		fs.mkdirSync(outputDir);
 	}
 	
-	var print = function(spec, packedNupkgPath) {
-	    if (options.print) {
+	var log = function(spec, packedNupkgPath) {
+	    if (options.log) {
 			console.log("Packed: " + spec + " to " + packedNupkgPath);
 	    }
 	}
@@ -122,7 +122,7 @@ Nu.prototype.pack = function (options, callback) {
 	        outputDirectory: outputDir
 		}).then(function () {
 			var packedNupkgPath = resolveNupkgPath(options.spec, outputDir);
-	        print(options.spec, packedNupkgPath);
+	        log(options.spec, packedNupkgPath);
 	        finishCallback();
 	    });
 	}
@@ -133,7 +133,7 @@ Nu.prototype.pack = function (options, callback) {
 			outputDirectory: outputDir
 		}).then(function () {
 			var packedNupkgPath = resolveNupkgPath(data.nuspec, outputDir);
-			print(data.nuspec, packedNupkgPath);
+			log(data.nuspec, packedNupkgPath);
 		    data.nupkg = packedNupkgPath;		    
 		    callback(null, data);
 			finishCallback();
@@ -150,8 +150,8 @@ Nu.prototype.add = function (options, callback) {
 	}
 	var nuget = getInstance();
 
-	var print = function(nupkg) {
-		if (options.print) {
+	var log = function(nupkg) {
+		if (options.log) {
 			console.log("Added: " + nupkg + " to " + options.source);
 		} 
 	}
@@ -162,7 +162,7 @@ Nu.prototype.add = function (options, callback) {
 			nupkg: options.nupkg,
 			source: options.source
 		}).then(function () {
-		    print(options.nupkg);
+		    log(options.nupkg);
 			finishCallback();
 		});;
 	} else {
@@ -171,7 +171,7 @@ Nu.prototype.add = function (options, callback) {
 				nupkg: data.nupkg,
 				source: options.source
 			}).then(function () {
-			    print(data.nupkg);
+			    log(data.nupkg);
 				callback(null, data);
 				finishCallback();
 			});

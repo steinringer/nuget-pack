@@ -38,7 +38,8 @@ describe('nuget-pckg', function () {
 			ng.pack({
 				outputDirectory: './tests/publishFolder',
 				spec: './tests/proj1/proj1.nuspec'
-			}, function() {
+			}, function () {
+				//Assert
 			    var created = fs.existsSync(expectedPackage);
 			    expect(created).toBeTruthy();
 			    done();
@@ -60,7 +61,8 @@ describe('nuget-pckg', function () {
 				outputDirectory: './tests/publishFolder'
 			})).on('data', function(aa) {
 				d.push(aa);
-			}).on('end', function() {
+			}).on('end', function () {
+				//Assert
 			    var created = fs.existsSync(expectedPackage);
 				expect(created).toBeTruthy();
 			    expect(d[0].nuspec).toEqual('c:\\_dev\\nuget-pack\\tests\\proj1\\proj1.nuspec');
@@ -88,7 +90,8 @@ describe('nuget-pckg', function () {
 		    ng.add({
 				nupkg: './tests/packed/Proj1.1.0.0.nupkg',
 				source: './tests/server/'
-		    }, function() {
+			}, function () {
+				//Assert
 		        expectedPackage.forEach(function (e) {
 					var created = fs.existsSync(e);
 					expect(created).toBeTruthy();
@@ -118,6 +121,7 @@ describe('nuget-pckg', function () {
 			.pipe(ng.add({
 				source: './tests/server/'
 			})).on('end', function () {
+				//Assert
 				expectedPackage.forEach(function (e) {
 					var created = fs.existsSync(e);
 					expect(created).toBeTruthy();

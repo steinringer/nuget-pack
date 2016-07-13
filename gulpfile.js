@@ -5,27 +5,27 @@ var gulp = require('gulp'),
 
 
 var ng = new Ng({
-	baseDir: path.resolve('./tests/proj1')
+	baseDir: path.resolve('./tests')
 });
 
-gulp.task('stream', function () {
+gulp.task('stream', function (done) {
 	ng.getNuspecs({
-		skip: ['proj2']
+		skip: ['server', 'publishFolder']
 	})
 	.pipe(ng.pack({
 		outputDirectory: './tests/publishFolder',
-		print: true
+		log: true
 	}))
 	.pipe(ng.add({
 		source: './tests/server',
-		print: true
-	}));
+		log: true
+	}, done));
 });
 
 gulp.task('list', function(cb) {
     ng.getNuspecs({
-        skip: ['proj2'],
-        print: true
+		log: true,
+		skip: ['server', 'publishFolder']
 	}, cb);
 });
 
@@ -33,7 +33,7 @@ gulp.task('pack', ['list'], function (cb) {
 	ng.pack({
 		outputDirectory: './tests/publishFolder',
 		spec: './tests/proj1/proj1.nuspec',
-		print: true
+		log: true
 	}, cb);
 });
 
@@ -41,7 +41,7 @@ gulp.task('add', ['pack'],  function () {
 	ng.add({
 		nupkg: './tests/publishFolder/Proj1.1.0.0.nupkg',
 		source: './tests/server',
-		print: true
+		log: true
 	});
 });
 

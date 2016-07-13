@@ -54,7 +54,16 @@ var resolveOutputPath = function (self, options) {
     return path.join(__dirname, self.options.baseDir);
 }
 
-Nu.prototype.getNuspecsStream = function (options, callback) {
+var getInstance = function() {
+	var nugetExePath = path.join(__dirname, 'bin/nuget.exe');
+	var nuget = Nuget({
+		nugetPath: nugetExePath,
+		verbosity: 'quiet'
+	});
+    return nuget;
+}
+
+Nu.prototype.getNuspecs = function (options, callback) {
 	options = options || {};
 	var finishCallback = callback || function () { };
 	
@@ -77,7 +86,7 @@ Nu.prototype.getNuspecsStream = function (options, callback) {
 	    var obj = new NuObject(f);
 		rs.push(obj);
 		if (options.print) {
-			console.log(obj.nuspec + "\r\n");
+			console.log(obj.nuspec);
 		}
 	});
 	
@@ -86,7 +95,7 @@ Nu.prototype.getNuspecsStream = function (options, callback) {
 	return rs;
 }
 
-Nu.prototype.packStream = function (options, callback) {
+Nu.prototype.pack = function (options, callback) {
 	options = options || {};
 	var finishCallback = callback || function () { };
 	
@@ -94,16 +103,17 @@ Nu.prototype.packStream = function (options, callback) {
 	    throw new Error('Callback has to be an function!');
 	}
     var self = this;
-	
-	var nugetExePath = path.join(__dirname, 'bin/nuget.exe');
-	var nuget = Nuget({
-		nugetPath: nugetExePath,
-		verbosity: 'quiet'
-	});
+    var nuget = getInstance();
 	
 	var outputDir = resolveOutputPath(self, options);
 	if (!fs.existsSync(outputDir)) {
 		fs.mkdirSync(outputDir);
+	}
+	
+	var print = function(spec, packedNupkgPath) {
+	    if (options.print) {
+			console.log("Packed: " + spec + " to " + packedNupkgPath);
+	    }
 	}
 	
 	if (options.spec) {
@@ -112,9 +122,7 @@ Nu.prototype.packStream = function (options, callback) {
 	        outputDirectory: outputDir
 		}).then(function () {
 			var packedNupkgPath = resolveNupkgPath(options.spec, outputDir);
-			if (options.print) {
-				console.log("Packed: " + options.spec  + " to " + packedNupkgPath);
-			}
+	        print(options.spec, packedNupkgPath);
 	        finishCallback();
 	    });
 	}
@@ -125,38 +133,36 @@ Nu.prototype.packStream = function (options, callback) {
 			outputDirectory: outputDir
 		}).then(function () {
 			var packedNupkgPath = resolveNupkgPath(data.nuspec, outputDir);
-		    data.nupkg = packedNupkgPath;
-			callback(null, data);
-			if (options.print) {
-				console.log(data);
-			}
-			finishCallback(data);
+			print(data.nuspec, packedNupkgPath);
+		    data.nupkg = packedNupkgPath;		    
+		    callback(null, data);
+			finishCallback();
 		});
 	});
 }
 
-Nu.prototype.addStream = function (options, callback) {
+Nu.prototype.add = function (options, callback) {
 	options = options || {};
 	var finishCallback = callback || function () { };
 	
 	if (typeof finishCallback !== 'function') {
 		throw new Error('Callback has to be an function!');
 	}
+	var nuget = getInstance();
+
+	var print = function(nupkg) {
+		if (options.print) {
+			console.log("Added: " + nupkg + " to " + options.source);
+		} 
+	}
 	
-	var nugetExePath = path.join(__dirname, 'bin/nuget.exe');
-	var nuget = Nuget({
-		nugetPath: nugetExePath,
-		verbosity: 'quiet'
-	});
-	
+
 	if (options.nupkg) {
 		nuget.add({
 			nupkg: options.nupkg,
 			source: options.source
 		}).then(function () {
-			if (options.print) {
-				console.log("Added: " + options.nupkg + " to " + options.source);
-			}
+		    print(options.nupkg);
 			finishCallback();
 		});;
 	} else {
@@ -165,91 +171,12 @@ Nu.prototype.addStream = function (options, callback) {
 				nupkg: data.nupkg,
 				source: options.source
 			}).then(function () {
-				if (options.print) {
-					console.log(data);
-				}
-			    finishCallback();
+			    print(data.nupkg);
 				callback(null, data);
+				finishCallback();
 			});
 		});
 	}
-}
-
-Nu.prototype.getNuspecs = function (callback, options) {
-	options = options || {};
-	
-	var self = this;
-	var dir = resolveDir(self);
-	
-	if (!fs.existsSync(dir))
-		return callback(new Error('Provided baseDir does not exist'), null);
-	
-	find.file(/\w\.nuspec$/, dir, function (files) {
-		if (callback && typeof callback === 'function') {
-			var filtered = files.filter(function (f) {
-				return !shouldSkip(options, f);
-			});
-			if (filtered.length == 0)
-				callback(new Error('No .nuspec files match the criteria'), null);
-			else
-				callback(null, filtered);
-		} else {
-			throw new Error('You have to provide callback function.');
-		}
-		
-	});
-	return;
-};
-Nu.prototype.pack = function (callback, options) {
-	options = options || {};
-	var self = this;
-	
-	var nugetExePath = path.join(__dirname, 'bin/nuget.exe');
-	
-	var nuget = Nuget({
-		nugetPath: nugetExePath,
-		verbosity: 'quiet'
-	});
-	self.getNuspecs(function (error, res) {
-		var resolvedCnt = 0;
-		var expectedCnt = res.length;
-		var outputDir = resolveOutputPath(self, options);
-		if (!fs.existsSync(outputDir)) {
-			fs.mkdirSync(outputDir);
-		}
-		
-		res.forEach(function (item) {
-			
-			nuget.pack({
-				spec: item,
-				outputDirectory: outputDir
-			})
-                .then(function () {
-				resolvedCnt++;
-				if (resolvedCnt === expectedCnt && callback && typeof callback == 'function')
-					callback();
-			});
-
-
-		});
-	}, options);
-}
-Nu.prototype.add = function (callback, options) {
-	options = options || {};
-	var nugetExePath = path.join(__dirname, 'bin/nuget.exe');
-	var nuget = Nuget({
-		nugetPath: nugetExePath,
-		verbosity: 'quiet'
-	});
-	
-	nuget.add({
-		nupkg: options.nupkg,
-		source: options.source
-	}).then(function () {
-		if (callback && typeof callback === 'function') {
-			callback();
-		}
-	});
 }
 
 module.exports = Nu;

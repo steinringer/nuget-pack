@@ -6,21 +6,18 @@ describe('nuget-pckg', function () {
 		fs = require('fs');
 	
 	describe('getNuspecs', function () {
-
 		it('should list nuspec files', function (done) {
 			//Arrange
-			var ng = new Ng({
-				baseDir: './tests'
-			});
-
 		    var d = [];
 
-			ng.getNuspecs({ }).on('data', function(data) {
+			Ng.getNuspecs({
+			    baseDir: './tests'
+			}).on('data', function(data) {
 				d.push(data);
 			}).on('end', function () {
 				expect(d).toEqual([
-					'c:\\_dev\\nuget-pack\\tests\\proj1\\proj1.nuspec',
-					'c:\\_dev\\nuget-pack\\tests\\proj2\\proj2.nuspec'
+					'tests\\proj1\\proj1.nuspec',
+					'tests\\proj2\\proj2.nuspec'
 				]);
 			    done();
 			});
@@ -31,11 +28,9 @@ describe('nuget-pckg', function () {
 		it('should create nuget package with specified nuspec file', function (done) {
 		    //Arrange
 		    var expectedPackage = './tests/publishFolder/Proj1.1.0.0.nupkg';
-		    var ng = new Ng({
-				baseDir: './tests'
-			});
+
 			//Act
-			ng.pack({
+			Ng.pack({
 				outputDirectory: './tests/publishFolder',
 				spec: './tests/proj1/proj1.nuspec'
 			}, function () {
@@ -49,15 +44,13 @@ describe('nuget-pckg', function () {
 		it('should create nuget package with specified nuspec file - in a stream', function (done) {
 		    //Arrange
 		    var expectedPackage = './tests/publishFolder/Proj1.1.0.0.nupkg';
-		    var ng = new Ng({
-				baseDir: './tests'
-			});
 			var d = [];
 
 			//Act
-			ng.getNuspecs({
+			Ng.getNuspecs({
+				baseDir: './tests',
 				skip: ['proj2']
-			}).pipe(ng.pack({
+			}).pipe(Ng.pack({
 				outputDirectory: './tests/publishFolder'
 			})).on('data', function(data) {
 				d.push(data);
@@ -82,11 +75,9 @@ describe('nuget-pckg', function () {
 				'./tests/server/proj1/1.0.0/proj1.nuspec'
 			];
 
-			var ng = new Ng({
-				baseDir: './tests'
-			});
 			//Act
-		    ng.add({
+			Ng.add({
+				baseDir: './tests',
 				nupkg: './tests/packed/Proj1.1.0.0.nupkg',
 				source: './tests/server/'
 			}, function () {
@@ -106,18 +97,16 @@ describe('nuget-pckg', function () {
 				'./tests/server/proj1/1.0.0/proj1.1.0.0.nupkg.sha512',
 				'./tests/server/proj1/1.0.0/proj1.nuspec'
 			];
-
-			var ng = new Ng({
-				baseDir: './tests'				
-			});
+			
 			//Act
-			ng.getNuspecs({
+			Ng.getNuspecs({
+				baseDir: './tests',
 				skip: ['proj2']
 			})
-			.pipe(ng.pack({
+			.pipe(Ng.pack({
 				outputDirectory: './tests/publishFolder',
 			}))
-			.pipe(ng.add({
+			.pipe(Ng.add({
 				source: './tests/server/'
 			})).on('end', function () {
 				//Assert

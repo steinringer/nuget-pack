@@ -3,21 +3,17 @@ var gulp = require('gulp'),
 	fse = require('fs-extra'),
 	Ng = require('./nuget-pckg');
 
-
-var ng = new Ng({
-	baseDir: path.resolve('./tests')
-});
-
 // EXAMPLE: call the methods as streams
 gulp.task('stream', function (done) {
-	ng.getNuspecs({
-		skip: ['server', 'publishFolder']
+	Ng.getNuspecs({
+		skip: ['server', 'publishFolder'],
+		baseDir: path.resolve('./tests')
 	})
-	.pipe(ng.pack({
+	.pipe(Ng.pack({
 		outputDirectory: './tests/publishFolder',
 		log: true
 	}))
-	.pipe(ng.add({
+	.pipe(Ng.add({
 		source: './tests/server',
 		log: true
 	})).on('end', done);
@@ -25,14 +21,15 @@ gulp.task('stream', function (done) {
 
 // EXAMPLE: call the gulp tasks as prerequisities with done callbacks for correct order
 gulp.task('list', function(done) {
-    ng.getNuspecs({
+    Ng.getNuspecs({
 		log: true,
-		skip: ['server', 'publishFolder']
+		skip: ['server', 'publishFolder'],
+		baseDir: path.resolve('./tests')
 	}, done);
 });
 
 gulp.task('pack', ['list'], function (done) {
-	ng.pack({
+	Ng.pack({
 		outputDirectory: './tests/publishFolder',
 		spec: './tests/proj1/proj1.nuspec',
 		log: true
@@ -40,7 +37,7 @@ gulp.task('pack', ['list'], function (done) {
 });
 
 gulp.task('add', ['pack'],  function (done) {
-	ng.add({
+	Ng.add({
 		nupkg: './tests/publishFolder/Proj1.1.0.0.nupkg',
 		source: './tests/server',
 		log: true
@@ -50,7 +47,6 @@ gulp.task('add', ['pack'],  function (done) {
 gulp.task('clean', function() {
     clean();
 });
-
 
 var clean = function() {
 	fse.removeSync('./tests/publishFolder');

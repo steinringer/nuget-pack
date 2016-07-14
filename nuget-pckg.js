@@ -8,9 +8,7 @@ var fs = require('fs'),
 	Readable = require('stream').Readable;
 
 
-function Nu(options) {
-	this.options = options;
-}
+function Nu() {}
 
 var shouldSkip = function (options, nuspecFile) {
 	if (options.skip == null) options.skip = [];
@@ -24,14 +22,6 @@ var shouldSkip = function (options, nuspecFile) {
 	return should;
 }
 
-var resolveDir = function (self) {
-	var dir = self.options.baseDir;
-	if (!path.isAbsolute(self.options.baseDir)) {
-		dir = path.join(__dirname, self.options.baseDir);
-	}
-	return dir;
-}
-
 var resolveNupkgPath = function(nuspecPath, outputDir) {
 	var nuspecFileContents = fs.readFileSync(nuspecPath);
 	var json = xml2json.parser(nuspecFileContents.toString());
@@ -39,14 +29,6 @@ var resolveNupkgPath = function(nuspecPath, outputDir) {
 	var version = json.package.metadata.version;
 	var packedNupkgPath = path.join(outputDir, id + "." + version + ".nupkg");
     return packedNupkgPath;
-}
-
-var resolveOutputPath = function (self, options) {
-    var outputDirectory = options.outputDirectory;
-    if (outputDirectory) {
-        return outputDirectory;
-    }
-    return path.join(__dirname, self.options.baseDir);
 }
 
 var getInstance = function() {
@@ -67,16 +49,15 @@ var checkCallback = function () {
     }
 }
 
-Nu.prototype.getNuspecs = function (options, callback) {
+Nu.prototype.getNuspecs = function (options, finishCallback) {
 	options = options || {};
-	var finishCallback = callback || function () { };
+	options.baseDir = options.baseDir || '.';
+
+	finishCallback = finishCallback || function () { };
 	
 	var rs = new Readable({ objectMode: true });
 	
-	var self = this;
-	var dir = resolveDir(self);
-	
-	var files = find.fileSync(/\w\.nuspec$/, dir);
+	var files = find.fileSync(/\w\.nuspec$/, options.baseDir);
 	
 	var filtered = files.filter(function (nuspecFile) {
 		return !shouldSkip(options, nuspecFile);
@@ -100,8 +81,7 @@ Nu.prototype.pack = function (options, finishCallback) {
 	finishCallback = finishCallback || function () { };
     var nuget = getInstance();
 	
-	var self = this;
-    var outputDir = resolveOutputPath(self, options);
+    var outputDir = options.outputDirectory;
 	if (!fs.existsSync(outputDir)) {
 		fs.mkdirSync(outputDir);
 	}
@@ -153,7 +133,7 @@ Nu.prototype.add = function (options, finishCallback) {
 		}).then(function () {
 		    log(options.nupkg);
 			finishCallback();
-		});;
+		});
 	} else {
 		return map(function (data, callback) {
 			nuget.add({
@@ -167,4 +147,4 @@ Nu.prototype.add = function (options, finishCallback) {
 	}
 }
 
-module.exports = Nu;
+module.exports = new Nu;

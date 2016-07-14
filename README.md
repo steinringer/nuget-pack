@@ -16,15 +16,15 @@ var ng = new Ng({
 
 ng.getNuspecs({
     skip: ['obj'],  //patterns to be skipped when searching for nuspec in baseDir
-    print: true
+    log: true
 })
 .pipe(ng.pack({
     outputDirectory: './nupkg-publish-folder',
-    print: true
+    log: true
 }))
 .pipe(ng.add({
     source: './tests/server',
-    print: true
+    log: true
 }));
 
 ```
@@ -51,6 +51,8 @@ ng.pack();
 
 ##### Changelog:
 
-2.0.0 - not backward compatible. Introduced stream API, added support for Nuget Add command, Nuget.exe updated. Method signatures changed (see description above).\
-1.0.6 - updated dependencies find (0.1.7 -> 0.2.4) and nuget-runner (0.1.5 -> 0.1.8)\
+2.0.0 - not backward compatible. Introduced stream API, added support for Nuget Add command, Nuget.exe updated. Method signatures changed (see description above).
+
+1.0.6 - updated dependencies find (0.1.7 -> 0.2.4) and nuget-runner (0.1.5 -> 0.1.8)
+
 1.0.5 - updated nuget.exe to version 3.3

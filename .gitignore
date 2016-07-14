@@ -2,3 +2,5 @@
 node_modules/
 *.sln.DotSettings.user
 *.suo
+tests/publishFolder/
+tests/server/

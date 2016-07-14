@@ -28,6 +28,7 @@ ng.getNuspecs({
 }));
 
 ```
+See the [gulpfile](https://github.com/mcsdodo/nuget-pack/blob/dev/gulpfile.js) for additional examples.
 
 ##### Test
 ```

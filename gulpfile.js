@@ -8,6 +8,7 @@ var ng = new Ng({
 	baseDir: path.resolve('./tests')
 });
 
+// EXAMPLE: call the methods as streams
 gulp.task('stream', function (done) {
 	ng.getNuspecs({
 		skip: ['server', 'publishFolder']
@@ -22,27 +23,28 @@ gulp.task('stream', function (done) {
 	})).on('end', done);
 });
 
-gulp.task('list', function(cb) {
+// EXAMPLE: call the gulp tasks as prerequisities with done callbacks for correct order
+gulp.task('list', function(done) {
     ng.getNuspecs({
 		log: true,
 		skip: ['server', 'publishFolder']
-	}, cb);
+	}, done);
 });
 
-gulp.task('pack', ['list'], function (cb) {
+gulp.task('pack', ['list'], function (done) {
 	ng.pack({
 		outputDirectory: './tests/publishFolder',
 		spec: './tests/proj1/proj1.nuspec',
 		log: true
-	}, cb);
+	}, done);
 });
 
-gulp.task('add', ['pack'],  function (cb) {
+gulp.task('add', ['pack'],  function (done) {
 	ng.add({
 		nupkg: './tests/publishFolder/Proj1.1.0.0.nupkg',
 		source: './tests/server',
 		log: true
-	}, cb);
+	}, done);
 });
 
 gulp.task('clean', function() {

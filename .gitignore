@@ -4,3 +4,4 @@ node_modules/
 *.suo
 tests/publishFolder/
 tests/server/
+.ntvs_analysis.dat.tmp

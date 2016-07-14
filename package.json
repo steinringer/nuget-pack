@@ -1,6 +1,6 @@
 {
   "name": "nuget-pckg",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "Node.js module that scans solution folders for .nuspec files and packs packages.",
   "main": "nuget-pckg.js",
   "scripts": {

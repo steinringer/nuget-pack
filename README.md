@@ -10,19 +10,16 @@ Install this node module using npm install nuget-pckg --save-dev.
 var Ng = require('nuget-pckg'),
 path = require('path');
 
-var ng = new Ng({
-    baseDir: path.resolve('.')
-});
-
-ng.getNuspecs({
+Ng.getNuspecs({
+    baseDir: path.resolve('.'),
     skip: ['obj'],  //patterns to be skipped when searching for nuspec in baseDir
     log: true
 })
-.pipe(ng.pack({
+.pipe(Ng.pack({
     outputDirectory: './nupkg-publish-folder',
     log: true
 }))
-.pipe(ng.add({
+.pipe(Ng.add({
     source: './tests/server',
     log: true
 }));
@@ -51,7 +48,7 @@ ng.pack();
 
 ##### Changelog:
 
-2.0.0 - not backward compatible. Introduced stream API, added support for Nuget Add command, Nuget.exe updated. Method signatures changed (see description above).
+2.0.0 - not backward compatible. Introduced stream API, added support for Nuget Add command, Nuget.exe updated. Method signatures changed (see description above). require('nuget-pckg') retuns an instance already.
 
 1.0.6 - updated dependencies find (0.1.7 -> 0.2.4) and nuget-runner (0.1.5 -> 0.1.8)
 

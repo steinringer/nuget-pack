@@ -16,7 +16,7 @@ describe('nuget-pckg', function () {
 		    var d = [];
 
 			ng.getNuspecs({ }).on('data', function(data) {
-				d.push(data.nuspec);
+				d.push(data);
 			}).on('end', function () {
 				expect(d).toEqual([
 					'c:\\_dev\\nuget-pack\\tests\\proj1\\proj1.nuspec',
@@ -59,14 +59,13 @@ describe('nuget-pckg', function () {
 				skip: ['proj2']
 			}).pipe(ng.pack({
 				outputDirectory: './tests/publishFolder'
-			})).on('data', function(aa) {
-				d.push(aa);
+			})).on('data', function(data) {
+				d.push(data);
 			}).on('end', function () {
 				//Assert
 			    var created = fs.existsSync(expectedPackage);
 				expect(created).toBeTruthy();
-			    expect(d[0].nuspec).toEqual('c:\\_dev\\nuget-pack\\tests\\proj1\\proj1.nuspec');
-			    expect(d[0].nupkg).toEqual('tests\\publishFolder\\Proj1.1.0.0.nupkg');
+			    expect(d[0]).toEqual('tests\\publishFolder\\Proj1.1.0.0.nupkg');
 			    done();
 			});
 		});

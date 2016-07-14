@@ -12,11 +12,6 @@ function Nu(options) {
 	this.options = options;
 }
 
-function NuObject(nuspec, nupkg) {
-	this.nuspec = nuspec;
-	this.nupkg = nupkg;
-}
-
 var shouldSkip = function (options, nuspecFile) {
 	if (options.skip == null) options.skip = [];
 	options.skip.push('node_modules');
@@ -76,10 +71,6 @@ Nu.prototype.getNuspecs = function (options, callback) {
 	options = options || {};
 	var finishCallback = callback || function () { };
 	
-	if (typeof finishCallback !== 'function') {
-		throw new Error('Callback has to be an function!');
-	}
-
 	var rs = new Readable({ objectMode: true });
 	
 	var self = this;
@@ -87,15 +78,14 @@ Nu.prototype.getNuspecs = function (options, callback) {
 	
 	var files = find.fileSync(/\w\.nuspec$/, dir);
 	
-	var filtered = files.filter(function (f) {
-		return !shouldSkip(options, f);
+	var filtered = files.filter(function (nuspecFile) {
+		return !shouldSkip(options, nuspecFile);
 	});
 
-	filtered.forEach(function (f) {
-	    var obj = new NuObject(f);
-		rs.push(obj);
+	filtered.forEach(function (nuspecFile) {
+		rs.push(nuspecFile);
 		if (options.log) {
-			console.log(obj.nuspec);
+			console.log(nuspecFile);
 		}
 	});
 	
@@ -104,18 +94,14 @@ Nu.prototype.getNuspecs = function (options, callback) {
 	return rs;
 }
 
-Nu.prototype.pack = function (options, callback) {
+Nu.prototype.pack = function (options, finishCallback) {
     checkCallback(arguments);
 	options = options || {};
-	var finishCallback = callback || function () { };
-	
-	if (typeof finishCallback !== 'function') {
-	    throw new Error('Callback has to be an function!');
-	}
-    var self = this;
+	finishCallback = finishCallback || function () { };
     var nuget = getInstance();
 	
-	var outputDir = resolveOutputPath(self, options);
+	var self = this;
+    var outputDir = resolveOutputPath(self, options);
 	if (!fs.existsSync(outputDir)) {
 		fs.mkdirSync(outputDir);
 	}
@@ -136,28 +122,22 @@ Nu.prototype.pack = function (options, callback) {
 	        finishCallback();
 	    });
 	}
-	return map(function (data, callback) {
+	return map(function (nuspecFile, callback) {
 		nuget.pack({
-			spec: data.nuspec,
+			spec: nuspecFile,
 			outputDirectory: outputDir
 		}).then(function () {
-			var packedNupkgPath = resolveNupkgPath(data.nuspec, outputDir);
-			log(data.nuspec, packedNupkgPath);
-		    data.nupkg = packedNupkgPath;		    
-		    callback(null, data);
+			var packedNupkgPath = resolveNupkgPath(nuspecFile, outputDir);
+			log(nuspecFile, packedNupkgPath);
+		    callback(null, packedNupkgPath);
 		});
 	});
 }
 
-Nu.prototype.add = function (options, callback) {
+Nu.prototype.add = function (options, finishCallback) {
 	checkCallback(arguments);
-
 	options = options || {};
-	var finishCallback = callback || function () { };
-	
-	if (typeof finishCallback !== 'function') {
-		throw new Error('Callback has to be an function!');
-	}
+	finishCallback = finishCallback || function () { };
 	var nuget = getInstance();
 
 	var log = function(nupkg) {
@@ -177,10 +157,10 @@ Nu.prototype.add = function (options, callback) {
 	} else {
 		return map(function (data, callback) {
 			nuget.add({
-				nupkg: data.nupkg,
+				nupkg: data,
 				source: options.source
 			}).then(function () {
-			    log(data.nupkg);
+			    log(data);
 				callback(null, data);
 			});
 		});

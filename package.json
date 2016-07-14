@@ -4,7 +4,7 @@
   "description": "Node.js module that scans solution folders for .nuspec files and packs packages.",
   "main": "nuget-pckg.js",
   "scripts": {
-    "test": "jasmine-node tests --color"
+    "test": "jasmine-node tests --color --autotest"
   },
   "author": "Jozef Lacny <mcsdodo@ynet.sk>",
   "license": "MIT",

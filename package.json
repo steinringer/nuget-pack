@@ -24,9 +24,9 @@
     "nuget-runner": "^0.1.10",
     "simple-xml2json": "^1.2.3"
   },
-  "homepage": "https://github.com/mcsdodo/nuget-pack",
+  "homepage": "https://github.com/steinringer/nuget-pack",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcsdodo/nuget-pack"
+    "url": "https://github.com/steinringer/nuget-pack"
   }
 }

@@ -1,7 +1,7 @@
 ﻿# nuget-pckg [![NPM version](https://badge.fury.io/js/nuget-pckg.png)](http://badge.fury.io/js/nuget-pckg)
 Node.js module to pack nuGet packages from solution folder. Included a `gulpfile.js` to illustrate the functionality. Module is based on [node-nuget-runner](https://github.com/mikeobrien/node-nuget-runner) and uses Nuget.exe 3.3.0.
 
-It privides a stream based API for gathering multiple `*.nuspec` files, packing them intu `*.nupkg` packages and adding to remote server with Nuget Add command. Look [here](https://docs.nuget.org/consume/command-line-reference#add-command) for more details.
+It provides a stream based API for gathering multiple `*.nuspec` files, packing them into `*.nupkg` packages and pushes and publishes it into remote source (with support of http sources) with Nuget Push command. Look [here](https://docs.microsoft.com/en-gb/nuget/reference/cli-reference/cli-ref-push) for more details.
 
 Install this node module using npm install nuget-pckg --save-dev.
 
@@ -19,8 +19,9 @@ Ng.getNuspecs({
     outputDirectory: './nupkg-publish-folder',
     log: true
 }))
-.pipe(Ng.add({
-    source: './tests/server',
+.pipe(Ng.push({
+    source,
+    apiKey: apiKey,
     log: true
 }));
 
@@ -47,6 +48,7 @@ ng.pack();
 ```
 
 ##### Changelog:
+2.2.0 - introduced 'push' function which allows to pack and publish nuget package into remote source (support http sources)
 
 2.0.0 - not backward compatible. Introduced stream API, added support for Nuget Add command, Nuget.exe updated. Method signatures changed (see description above). require('nuget-pckg') retuns an instance already.
 

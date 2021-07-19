@@ -156,30 +156,20 @@ Nu.prototype.push = function (options, finishCallback) {
 	var log = function(nupkg) {
 		if (options.log) {
 			console.log("Pushed: " + nupkg + " to " + options.source);
-		} 
+		}
 	}
-	
-	if (options.nupkg) {
-		nuget.push({
-			nupkg: options.nupkg,
+
+	return map((data, callback) => {
+		nuget.push(data, {
 			source: options.source,
 			apiKey: options.apiKey
-		}).then(() => {
-			log(options.nupkg);
-			finishCallback();
+		})
+		.then(() => {
+			log(data);
+			callback(null, data);
 		});
-	} else {
-		return map((data, callback) => {
-			nuget.push(data, {
-				source: options.source,
-				apiKey: options.apiKey
-			})
-			.then(() => {
-				log(data);
-				callback(null, data);
-			});
-		});
-	}
+	});
+	
 }
 
 module.exports = new Nu;
